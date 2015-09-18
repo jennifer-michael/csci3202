@@ -12,19 +12,25 @@ class MyNode(object):
 		self.heuristic = None
 		self.f = None
 		 
-	def getDistance(self, parent, val, heuristic): #add heuristic
+	def getDistance(self, parent, val, heuristic): 
 		self.parent = parent
 		parentDistance = abs(parent.x-self.x) + abs(parent.y-self.y)
-		
+
+		#diagonal case
 		if(parentDistance == 2):
 			self.distFromStart = parent.distFromStart + 14
 		elif(parentDistance == 1):
 			self.distFromStart = parent.distFromStart + 10
 		
+		#mountain case
 		if(val == 1):
 			self.distFromStart += 10
+		
+		#manhatten
 		if(heuristic == 'M'):
 			self.heuristic = abs(9-self.x)+abs(7-self.y)
+		
+		#euclidean distance
 		else:
 			dx = abs(9-self.x)
 			dy = abs(7-self.y)
@@ -48,7 +54,8 @@ class MyNode(object):
 			self.distFromStart = runningDist
 			self.parent = otherNode
 			self.f = self.distFromStart + self.heuristic
-		
+	
+	#helper function	
 	def equals(self, diffNode):
 		return(self.x == diffNode.x and self.y == diffNode.y)
 		 
@@ -71,7 +78,6 @@ def aStarSearch(matrix, heuristic):
 				xPosition = curr.x+i
 				yPosition = curr.y+j
 				if(xPosition >= 0 and xPosition <=9 and yPosition >= 0 and yPosition <= 7):
-					#visited += 1
 					nextNode = MyNode(xPosition, yPosition)
 					notInClosed = True
 					for k in closed:
