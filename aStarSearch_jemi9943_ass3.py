@@ -11,20 +11,26 @@ class MyNode(object):
 		self.parent = None
 		self.heuristic = None
 		self.f = None
-		 
-	def getDistance(self, parent, specialNum, heuristic): #add heuristic
+		
+	def getDistance(self, parent, specialNum, heuristic): 
 		self.parent = parent
 		parentDistance = abs(parent.x-self.x) + abs(parent.y-self.y)
-		
+
+		#diagonal case
 		if(parentDistance == 2):
 			self.distFromStart = parent.distFromStart + 14
 		elif(parentDistance == 1):
 			self.distFromStart = parent.distFromStart + 10
 		
+                #mountains
 		if(specialNum == 1):
 			self.distFromStart += 10
+		
+		#manhatten
 		if(heuristic == 'M'):
 			self.heuristic = abs(9-self.x)+abs(7-self.y)
+		
+		#euclidean distance
 		else:
 			dx = abs(9-self.x)
 			dy = abs(7-self.y)
@@ -48,7 +54,8 @@ class MyNode(object):
 			self.distFromStart = runningDist
 			self.parent = otherNode
 			self.f = self.distFromStart + self.heuristic
-		
+	
+	#helper function	
 	def equals(self, diffNode):
 		return(self.x == diffNode.x and self.y == diffNode.y)
 		 
