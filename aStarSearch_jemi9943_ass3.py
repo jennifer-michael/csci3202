@@ -12,7 +12,7 @@ class MyNode(object):
 		self.heuristic = None
 		self.f = None
 		 
-	def getDistance(self, parent, val, heuristic): #add heuristic
+	def getDistance(self, parent, specialNum, heuristic): #add heuristic
 		self.parent = parent
 		parentDistance = abs(parent.x-self.x) + abs(parent.y-self.y)
 		
@@ -21,7 +21,7 @@ class MyNode(object):
 		elif(parentDistance == 1):
 			self.distFromStart = parent.distFromStart + 10
 		
-		if(val == 1):
+		if(specialNum == 1):
 			self.distFromStart += 10
 		if(heuristic == 'M'):
 			self.heuristic = abs(9-self.x)+abs(7-self.y)
@@ -71,23 +71,27 @@ def aStarSearch(matrix, heuristic):
 				xPosition = curr.x+i
 				yPosition = curr.y+j
 				if(xPosition >= 0 and xPosition <=9 and yPosition >= 0 and yPosition <= 7):
-					#visited += 1
 					nextNode = MyNode(xPosition, yPosition)
 					notInClosed = True
 					for k in closed:
 						if k.equals(nextNode):
 							notInClosed = False
-					if(matrix[xPosition][7-yPosition] is not 2 and notInClosed):
+					if(matrix[xPosition][7-yPosition] != 2 and notInClosed):
 						notInOpened = True
+						#have we looked at it?
 						for l in opened:
 							if l.equals(nextNode):
 								notInOpened = False
+						#if we haven't, we should look at it.
 						if notInOpened:
 							opened.append(nextNode)
 							visited += 1
 							nextNode.getDistance(curr, matrix[xPosition][7-yPosition], heuristic) #add heuristc
+						#and if we have, we should compare it to our curr node
 						else:
 							nextNode.compareNodes(curr, matrix[xPosition][7-yPosition])
+		
+		#What have we accomplished in this pass?
 		selected = closed[-1]
 		print("Distance: " + `selected.distFromStart` + ". Locations evaluated: " + `visited` + ".\n")
 		final = []
