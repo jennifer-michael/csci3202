@@ -13,6 +13,8 @@ and those values varied a lot based off the epsilon. However, the solution did n
 
 
 Results for an epsilon value of .5:
+(looks much prettier if you read in the raw format!!!)
+
 
 Please give me a world to navigate! Please type 'World1MDP.txt': World1MDP.txt
 Please give me a value of epsilon: .5
