@@ -1,6 +1,8 @@
 #Jennifer Michael
 #October 1, 2015
 #Csci 3202: Articial Intelligence
+#Assignment 5: Value Iteration
+#References: Ian Char
 
 import math
 import sys
@@ -224,4 +226,3 @@ if __name__ == '__main__':
 	mdp = MDPSearch(maze, float(epsilon))
 	mdp.search()
 		
-						

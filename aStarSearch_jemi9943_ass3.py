@@ -114,11 +114,10 @@ if __name__ == '__main__':
 	
 	maze = [[],[],[],[],[],[],[],[],[],[]]
 	
-	with open(myFile) as f:
+	with open("World1.txt") as f:
 		for line in f:
 			for i, j in enumerate(line.split()):
 				maze[i].append(int(j))
 				
 	aStarSearch(maze, heuristic)
 		
-						
