@@ -8,7 +8,8 @@ class BayesNode:
 	def __init__(self, name):
 		self.name = name
 		self.conditionals = {}
-		#self.marginal = 0
+		self.marginal = 0
+		self.foundValues = {}
 		self.probabilities = {}
 		self.parents = []
 		self.children = []
@@ -57,22 +58,20 @@ def create_bayesNet(value1, value2):
 	
 	#Cancer Node
 	cancer = BayesNode("Cancer")
-	cancer.set_probability["~PS"] = .05 #high pollution, smoker
-	cancer.set_probability["~P~S"] = .02 #high pollution, nonsmoker
-	cancer.set_probability["PS"] = .03 #low pollution, smoker
-	cancer.set_probability["P~S"] = .001 #low pollutin, nonsmoker
+	cancer.set_probability("~PS",.05) #high pollution, smoker
+	cancer.set_probability("~P~S", .02) #high pollution, nonsmoker
+	cancer.set_probability("PS", .03) #low pollution, smoker
+	cancer.set_probability("P~S", .001) #low pollutin, nonsmoker
 
 	#Xray Node
 	xray = BayesNode("XRay")
-	xray.set_probability(.9)
-	xray.set_probability["C"] = .9 #cancer is true
-	xray.set_probability["~C"] = .2 #cancer is false
+	xray.set_probability("C",.9 )#cancer is true
+	xray.set_probability("~C", .2) #cancer is false
 	
 	#Dyspnoea Node
 	dyspnoea = BayesNode("Dyspnoea")
-	dyspnoea.set_probability(.65)
-	dyspnoea.set_probability["C"] = .65 #cancer is true
-	dyspnoea.set_probability["~C"] = .3 #cancer is false
+	dyspnoea.set_probability("C",.65) #cancer is true
+	dyspnoea.set_probability("~C", .3) #cancer is false
 	
 	#Add parents and children to everyone
 	cancer.add_parent(pollution)

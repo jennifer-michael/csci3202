@@ -40,17 +40,18 @@ def getArgs(argv):
 	opts, args = getopt.getopt(argv, 'm:j:p:g:')
 	for opt in opts:
 		if opt[0] == '-m':
-			m = handle_m(myArgs.m)
+			variable = arg[0]
 			
 		elif opt[0] == '-j':
-			j = handle_j(myArgs.j)
+			variable = arg[0]
 
 		elif opt[0] == '-p':
-			p = handle_p(myArgs.p)
+			variable = arg[0]
+			probability = arg[1]
 			print(p)
 
 		elif opt[0] == '-g':
-			g = handle_g(myArgs.g)
+			variable = arg[1]
 
 
 
