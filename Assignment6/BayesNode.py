@@ -43,8 +43,8 @@ def create_bayesNet(value1, value2):
 	
 	#Pollution Node
 	pollution = BayesNode("Pollution")
-	pollution.set_probability("L", (1.0 - value1))
-	pollution.marginal = (1.0 - value1)
+	pollution.set_probability("L", (value1))
+	pollution.marginal = (value1)
 	
 	#Smoker Node
 	smoker = BayesNode("Smoker")

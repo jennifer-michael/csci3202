@@ -2,6 +2,7 @@ import getopt
 import argparse
 import sys
 import BayesNode
+import ProbabilityCalcs
 
  #Jennifer Michael
  #Assignment 6: Bayes Nets
@@ -13,7 +14,7 @@ def main():
 			
 def getArgs(argv):
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], 'm:j:p:g')
+		opts, args = getopt.getopt(sys.argv[1:], 'm:j:p:g:')
 	except getopt.GetoptError as err:
 		print str(err)
 		sys.exit(2)
@@ -72,21 +73,68 @@ def getArgs(argv):
 		elif output == "d":
 			print(bn.nodes["Dyspnoea"].marginal)
 		elif output == "~d":
-			(1.0 - bn.nodes["Dyspnoea"].marginal)
+			print(1.0 - bn.nodes["Dyspnoea"].marginal)
 		elif output == "x":
-			print(bn.nodes["Xray"].marginal)
+			print(bn.nodes["XRay"].marginal)
 		elif output == "~x":
-			(1.0 - bn.nodes["Xray"].marginal)
+			print(1.0 - bn.nodes["XRay"].marginal)
 		else:
 			print("Not a valid option")
 			sys.exit(2)
 			
 	#elif operation == "-j":
-		#if output == ""
+		#if output == "PSC":
 			#print()
+		#elif output == "psc":
+			#print()
+		#elif output == "~p~s~c":
+			#print()
+		
+		#extras
+		
 	
-	#elif operation == "-g":
-		#if output == ""
+	if operation == "-g":
+		if output == "p|c":
+			x = ProbabilityCalcs.probPollutionGivenCancer(bn.nodes["Cancer"], 
+														  bn.nodes["XRay"], 
+														  bn.nodes["Pollution"], 
+														  bn.nodes["Smoker"])
+			print(x)
+			
+		elif output == "c|p":
+			x = ProbabilityCalcs.probCancerGivenPollution(bn.nodes["Cancer"], 
+														  bn.nodes["XRay"], 
+														  bn.nodes["Pollution"], 
+														  bn.nodes["Smoker"])
+			print(x)
+		
+		#this one is wrong until i can get joint things working
+		elif output == "d|s":
+			x = ProbabilityCalcs.probDyspnoeaGivenSmoker(bn.nodes["Cancer"], 
+														  bn.nodes["XRay"], 
+														  bn.nodes["Pollution"], 
+														  bn.nodes["Smoker"])
+			print(x)
+		
+		elif output == "c|s":
+			x = ProbabilityCalcs.probCancerGivenSmoker(bn.nodes["Cancer"], 
+														  bn.nodes["Pollution"], 
+														  bn.nodes["Smoker"])
+			print(x)
+		
+		elif output == "s|c":
+			x = ProbabilityCalcs.probSmokerGivenCancer(bn.nodes["Cancer"],
+															bn.nodes["Pollution"],
+															bn.nodes["Smoker"])
+			print(x)
+		
+		#this one is also wrong because of joint crap
+		elif output == "x|s":
+			x = ProbabilityCalcs.probXrayGivenSmoker(bn.nodes["Cancer"], 
+														  bn.nodes["XRay"], 
+														  bn.nodes["Pollution"], 
+														  bn.nodes["Smoker"])
+			print(x)
 		
 
 
