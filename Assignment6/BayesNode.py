@@ -7,10 +7,9 @@ class BayesNode:
 	
 	def __init__(self, name):
 		self.name = name
-		self.conditionals = {}
+		#self.conditionals = {}
 		self.marginal = 0
-		self.foundValues = {}
-		self.probabilities = {}
+		self.probabilities = {} #maybe change name to conditionals
 		self.parents = []
 		self.children = []
 	
@@ -21,12 +20,9 @@ class BayesNode:
 	#Keep track of children
 	def add_child(self, child):
 		self.children.append(child)
-	
-	#Get probability based off parents	
-	#This doesn't work at all cuz I suck.
 
 	def set_probability(self, key, value):
-		self.probability[key] = value
+		self.probabilities[key] = value
 		
 	def __str__(self):
 		return (str(self.name))
@@ -41,7 +37,8 @@ class BayesNet(object):
 	
 	def add_node(self, node):
 		self.nodes[node.name] = node
-			
+		
+				
 def create_bayesNet(value1, value2):
 	'''
 	Creates all the BayesNodes based on the values they have 
@@ -51,10 +48,12 @@ def create_bayesNet(value1, value2):
 	#Pollution Node
 	pollution = BayesNode("Pollution")
 	pollution.set_probability("L", value1)
+	pollution.marginal = value1
 	
 	#Smoker Node
 	smoker = BayesNode("Smoker")
 	smoker.set_probability("T", value2)
+	smoker.marginal = value2
 	
 	#Cancer Node
 	cancer = BayesNode("Cancer")
@@ -62,6 +61,7 @@ def create_bayesNet(value1, value2):
 	cancer.set_probability("~P~S", .02) #high pollution, nonsmoker
 	cancer.set_probability("PS", .03) #low pollution, smoker
 	cancer.set_probability("P~S", .001) #low pollutin, nonsmoker
+	marginalCancer(cancer, pollution, smoker)
 
 	#Xray Node
 	xray = BayesNode("XRay")
@@ -93,12 +93,20 @@ def create_bayesNet(value1, value2):
 	
 	return bayesNet
 
-#def set_conditionals():
-#something....	
+def marginalCancer(cancerNode, pollutionNode, smokerNode):
+	firstOp = (cancerNode.probabilities["~PS"]) * (1.0 - pollutionNode.probabilities["L"]) * (smokerNode.probabilities["T"])
+	secondOp = cancerNode.probabilities["~P~S"] * (1.0 - pollutionNode.probabilities["L"]) * (1.0 - smokerNode.probabilities["T"])
+	thirdOp = cancerNode.probabilities["PS"] * pollutionNode.probabilities["L"] * smokerNode.probabilities["T"]
+	fourthOp = cancerNode.probabilities["P~S"] * pollutionNode.probabilities["L"] * (1.0 - smokerNode.probabilities["T"])
+	 
+	probOfCancer = firstOp + secondOp + thirdOp + fourthOp
+	
+	cancerNode.marginal = probOfCancer
+	print(probOfCancer)
 
 def main():
 	create_bayesNet(.9, .3)
-	set_conditionals()
+	#set_conditionals()
 	
 if __name__ == '__main__':
 	main()
