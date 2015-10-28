@@ -4,55 +4,40 @@ import BayesNode
 Where all the calculations will be done.
 '''
 
-'''Joints
-def jointXSCP(cancerNode, xrayNode, pollutionNode, smokerNode):
-	firstOp = xrayNode.probabilities["C"] * cancerNode.probabilities["~PS"] * smokerNode.probabilities["T"] * (1.0 - pollutionNode.probabilities["L"])
-				
-	secondOp = xrayNode.probabilities["C"] * cancerNode.probabilities["PS"] * smokerNode.probabilities["T"] * pollutionNode.probabilities["L"]
-				
-	thirdOp = xrayNode.probabilities["~C"] * cancerNode.probabilities["~PS"] * smokerNode.probabilities["T"] * (1.0 - pollutionNode.probabilities["L"])
-				
-	fourthOp = xrayNode.probabilities["~C"] * cancerNode.probabilities["PS"] * smokerNode.probabilities["T"] * pollutionNode.probabilities["L"]
-				
-	joint_xscp = firstOp + secondOp + thirdOp + fourthOp
+'''Joints'''
+def joint_psc(cancerNode, pollutionNode, smokerNode, wantedInfo):
 	
-	return joint_xscp
-
-def jointDSCP(cancerNode, dyspnoeaNode, pollutionNode, smokerNode):
-	firstOp = dyspnoeaNode.probabilities["C"] * cancerNode.probabilities["~PS"] * smokerNode.probabilities["T"] * (1.0 - pollutionNode.probabilities["L"])
-				
-	secondOp = dyspnoeaNode.probabilities["C"] * cancerNode.probabilities["PS"] * smokerNode.probabilities["T"] * pollutionNode.probabilities["L"]
-				
-	thirdOp = dyspnoeaNode.probabilities["~C"] * cancerNode.probabilities["~PS"] * smokerNode.probabilities["T"] *(1.0 - pollutionNode.probabilities["L"])
-				
-	fourthOp = dyspnoeaNode.probabilities["~C"] * cancerNode.probabilities["PS"] * smokerNode.probabilities["T"] * pollutionNode.probabilities["L"]
-				
-	joint_dscp = firstOp + secondOp + thirdOp + fourthOp
+	if wantedInfo == "psc":
+		val = cancerNode.probabilities["PS"]*pollutionNode.probabilities["L"]*smokerNode.probabilities["T"]
+	if wantedInfo == "ps~c":
+		val = (1-cancerNode.probabilities["PS"])*pollutionNode.probabilities["L"]*smokerNode.probabilities["T"]
+	if wantedInfo == "p~s~c":
+		val = (1-cancerNode.probabilities["P~S"])*pollutionNode.probabilities["L"]*(1.0-smokerNode.probabilities["T"])
+	if wantedInfo == "p~sc":
+		val = cancerNode.probabilities["P~S"]*pollutionNode.probabilities["L"]*(1.0-smokerNode.probabilities["T"])
+	if wantedInfo == "~p~s~c":
+		val = (1-cancerNode.probabilities["~P~S"])*(1.0 - pollutionNode.probabilities["L"])*(1.0-smokerNode.probabilities["T"])
+	if wantedInfo == "~psc":
+		val = cancerNode.probabilities["~PS"]*(1.0 - pollutionNode.probabilities["L"])*smokerNode.probabilities["T"]
+	if wantedInfo == "~p~sc":
+		val = cancerNode.probabilities["~P~S"]*(1.0 - pollutionNode.probabilities["L"])*(1.0-smokerNode.probabilities["T"])
+	if wantedInfo == "~ps~c":
+		val = (1-cancerNode.probabilities["~PS"])*(1.0 - pollutionNode.probabilities["L"])*smokerNode.probabilities["T"]
+		
+	return val
 	
-	return joint_dscp
+def joint_PSC(cancerNode, pollutionNode, smokerNode):
+	distributionParts = []
+	distributionParts.append(cancerNode.probabilities["PS"]*pollutionNode.probabilities["L"]*smokerNode.probabilities["T"])
+	distributionParts.append((1-cancerNode.probabilities["PS"])*pollutionNode.probabilities["L"]*smokerNode.probabilities["T"])
+	distributionParts.append((1-cancerNode.probabilities["P~S"])*pollutionNode.probabilities["L"]*(1.0-smokerNode.probabilities["T"]))
+	distributionParts.append(cancerNode.probabilities["P~S"]*pollutionNode.probabilities["L"]*(1.0-smokerNode.probabilities["T"]))
+	distributionParts.append((1-cancerNode.probabilities["~P~S"])*(1.0-pollutionNode.probabilities["L"])*(1.0-smokerNode.probabilities["T"]))
+	distributionParts.append(cancerNode.probabilities["~PS"]*(1.0-pollutionNode.probabilities["L"])*smokerNode.probabilities["T"])
+	distributionParts.append(cancerNode.probabilities["~P~S"]*(1.0-pollutionNode.probabilities["L"])*(1.0-smokerNode.probabilities["T"]))
+	distributionParts.append((1-cancerNode.probabilities["~PS"])*(1.0-pollutionNode.probabilities["L"])*smokerNode.probabilities["T"])
 	
-def jointSCP(cancerNode, pollutionNode, smokerNode, xrayNode):
-
-	sGc = probSmokerGivenCancer(cancerNode, pollutionNode, smokerNode)
-	cGp = probCancerGivenPollution(cancerNode, xrayNode, pollutionNode, smokerNode)
-	
-	joint_scp = sGc * cGp * pollutionNode.probabilities["L"]
-	return joint_scp
-	
-def jointDSCP(cancerNode, pollutionNode, smokerNode, dNode):
-	dGc = probDyspnoeaGivenCancer(cancerNode, pollutionNode, smokerNode, dNode)
-	sGcp = probSmokerGivenCancerandPollution(cancerNode, pollutionNode, smokerNode, dNode)
-	cGp = probCancerGivenPollutionLow(cancerNode, xrayNode, pollutionNode, smokerNode)
-	
-	numerator = dGc * cancerNode.probabilities["PS"] * smokerNode.marginal * pollutionNode.marginal * sGcp * cGp * pollutionNode.marginal
-	
-	denom = probSmokerGivenCancerandPollution(cancerNode, pollutionNode, smokerNode, dNode)
-	
-	j_DSCP = numerator/denom
-	
-	return j_DSCP
-	
-'''
+	return distributionParts
 
 '''Conditionals'''
 def probCancerGivenSmoker(cancerNode, pollutionNode, smokerNode):

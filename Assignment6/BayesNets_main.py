@@ -67,38 +67,57 @@ def getArgs(argv):
 			print(bn.nodes["Pollution"].marginal)
 		elif output == "~p":
 			print(1.0 - bn.nodes["Pollution"].marginal)
+		elif output == "P":
+			print("True:/n")
+			print(bn.nodes["Pollution"].marginal)
+			print("/nFalse: ")
+			print(1.0 - bn.nodes["Pollution"].marginal)
 		elif output == "s":
 			print(bn.nodes["Smoker"].marginal)
 		elif output == "~s":
+			print(1.0 - bn.nodes["Smoker"].marginal)
+		elif output == "S":
+			print("True:")
+			print(bn.nodes["Smoker"].marginal)
+			print("False: ")
 			print(1.0 - bn.nodes["Smoker"].marginal)
 		elif output == "c":
 			print(bn.nodes["Cancer"].marginal) 
 		elif output == "~c":
 			print(1.0 - bn.nodes["Cancer"].marginal)
+		elif output == "C":
+			print("True:")
+			print(bn.nodes["Cancer"].marginal)
+			print("False: ")
+			print(1.0 - bn.nodes["Cancer"].marginal)
 		elif output == "d":
 			print(bn.nodes["Dyspnoea"].marginal)
 		elif output == "~d":
 			print(1.0 - bn.nodes["Dyspnoea"].marginal)
+		elif output == "D":
+			print("True:")
+			print(bn.nodes["Dyspnoea"].marginal)
+			print("False: ")
+			print(1.0 - bn.nodes["Dyspnoea"].marginal)
 		elif output == "x":
 			print(bn.nodes["XRay"].marginal)
 		elif output == "~x":
+			print(1.0 - bn.nodes["XRay"].marginal)
+		elif output == "X":
+			print("True:")
+			print(bn.nodes["XRay"].marginal)
+			print("False: ")
 			print(1.0 - bn.nodes["XRay"].marginal)
 		else:
 			print("Not a valid option")
 			sys.exit(2)
 			
 	elif operation == "-j":
-		#if output == "PSC":
-			#print()
-		if output == "spc":
-			x = ProbabilityCalcs.jointSCP(bn.nodes["Cancer"], bn.nodes["Pollution"], bn.nodes["Smoker"], bn.nodes["XRay"])
-			print(x)
-		#elif output == "psc":
-			#print(x)
-		#elif output == "~p~s~c":
-			#print()
-		
-		#extras
+		if output == "PSC":
+			print ProbabilityCalcs.joint_PSC(bn.nodes["Cancer"], bn.nodes["Pollution"], bn.nodes["Smoker"])
+		else:
+			wanted = output
+			print ProbabilityCalcs.joint_psc(bn.nodes["Cancer"], bn.nodes["Pollution"], bn.nodes["Smoker"], wanted)
 		
 	
 	elif operation == "-g":
