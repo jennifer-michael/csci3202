@@ -7,6 +7,11 @@ import ProbabilityCalcs
  #Jennifer Michael
  #Assignment 6: Bayes Nets
  #Due: October 23, 2015
+ #Worked with Brooke Robinson and Mario Alanis
+ 
+ ########################################
+ #           Bayes Nets! 				#
+ ########################################
 
 def main():
 	getArgs(sys.argv[1:])
@@ -135,6 +140,75 @@ def getArgs(argv):
 														  bn.nodes["Pollution"], 
 														  bn.nodes["Smoker"])
 			print(x)
+		
+		#wrong	
+		elif output == "d|s":
+			x = ProbabilityCalcs.probDyspnoeaGivenSmoker(bn.nodes["Cancer"], 
+															bn.nodes["XRay"], 
+															bn.nodes["Pollution"], 
+															bn.nodes["Smoker"])
+															
+			print(x)
+		#didn't have to do	
+		elif output == "c|p":
+			x = ProbabilityCalcs.probCancerGivenPollution(bn.nodes["Cancer"], 
+															bn.nodes["XRay"], 
+															bn.nodes["Pollution"], 
+															bn.nodes["Smoker"])
+			print(x)
+			
+		#works
+		elif output == "p|c":
+			x = ProbabilityCalcs.probPollutionGivenCancer(bn.nodes["Cancer"], 
+															bn.nodes["XRay"], 
+															bn.nodes["Pollution"], 
+															bn.nodes["Smoker"])
+															
+			print(x)
+		
+		#works!	
+		elif output == "x|d":
+			x = ProbabilityCalcs.probXrayGivenDys(bn.nodes["Cancer"], 
+													bn.nodes["XRay"], 
+													bn.nodes["Dyspnoea"]) 
+													
+			print(x)
+		
+		#IT WORKS	
+		elif output == "c|ds":
+			x = ProbabilityCalcs.probCancerGivenDysAndSmoker(bn.nodes["Cancer"], 
+													bn.nodes["Pollution"], 
+													bn.nodes["Smoker"],
+													bn.nodes["Dyspnoea"]) 
+			print(x)
+		#you left off testing here jenny!!!!!!	
+		elif output == "d|p":
+			x = ProbabilityCalcs.probDyspnoeaGivenPollution(bn.nodes["Cancer"], 
+													bn.nodes["Pollution"], 
+													bn.nodes["Smoker"],
+													bn.nodes["Dyspnoea"]) 
+			print(x)
+			
+		elif output == "p|d":
+			x = ProbabilityCalcs.probPollutionGivenDys(bn.nodes["Cancer"], 
+													bn.nodes["Pollution"], 
+													bn.nodes["Smoker"],
+													bn.nodes["Dyspnoea"])
+													
+			print(x)
+			
+		elif output == "s|d":
+			x = ProbabilityCalcs.probSmokerGivenDyspnoea(bn.nodes["Cancer"], 
+													bn.nodes["Pollution"], 
+													bn.nodes["Smoker"],
+													bn.nodes["Dyspnoea"])
+			print(x)
+			
+		elif output == "c|d":
+			x = ProbabilityCalcs.probCancerGivenDyspnoea(bn.nodes["Cancer"], bn.nodes["Dyspnoea"])
+			print(x)
+			
+																		
 		
 
 

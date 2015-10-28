@@ -129,10 +129,11 @@ def probXrayGivenSmoker(cancerNode, xrayNode, pollutionNode, smokerNode):
 	numerator = jointXSCP(cancerNode, xrayNode, pollutionNode, smokerNode)
 	denom = jointSCP(cancerNode, pollutionNode, smokerNode)
 	
-	xGs = numerator/denom
+	xGs = numerator/smokerNode.probabilities["T"]
 	
 	return xGs
-
+		
+	
 def probDyspnoeaGivenSmoker(cancerNode, xrayNode, pollutionNode, smokerNode):
 	numerator = jointDSCP(cancerNode, xrayNode, pollutionNode, smokerNode)
 	denom = jointSCP(cancerNode, pollutionNode, smokerNode)
@@ -160,6 +161,69 @@ def probPollutionGivenCancer(cancerNode, xrayNode, pollutionNode, smokerNode):
 	
 	results["pGivenc"] = pGc
 	return pGc
+	
+def probXrayGivenDys(cancerNode, xrayNode, dyspnoeaNode):
+	#prob(x|c)*P(c)*P(d|c) + P(x|~c)*P(~c)*P(d|~c) / P(d)
+	
+	firstOp = xrayNode.probabilities["C"] * cancerNode.marginal * dyspnoeaNode.probabilities["C"]
+	secondOp = xrayNode.probabilities["~C"] * (1.0 - cancerNode.marginal) * dyspnoeaNode.probabilities["~C"]
+	denom = dyspnoeaNode.marginal
+	
+	xGivend = (firstOp + secondOp) / denom
+	
+	return xGivend
+def probCancerGivenDysAndSmoker(cancerNode, pollutionNode, smokerNode, dyspnoeaNode):
+	firstNum = dyspnoeaNode.probabilities["C"] * cancerNode.probabilities["PS"] * pollutionNode.probabilities["L"] * smokerNode.probabilities["T"]
+	secondNum = dyspnoeaNode.probabilities["C"] * cancerNode.probabilities["~PS"] * (1.0 - pollutionNode.probabilities["L"]) * smokerNode.probabilities["T"]
+	
+	firstDen = dyspnoeaNode.probabilities["C"] * cancerNode.probabilities["PS"] * pollutionNode.probabilities["L"] * smokerNode.probabilities["T"]
+	secondDen = dyspnoeaNode.probabilities["C"] * cancerNode.probabilities["~PS"] * (1.0 - pollutionNode.probabilities["L"]) * smokerNode.probabilities["T"]
+	thirdDen = dyspnoeaNode.probabilities["~C"] * (1-cancerNode.probabilities["PS"]) * pollutionNode.probabilities["L"] * smokerNode.probabilities["T"]
+	fourthDen = dyspnoeaNode.probabilities["~C"] * (1-cancerNode.probabilities["~PS"]) * (1.0 - pollutionNode.probabilities["L"]) * smokerNode.probabilities["T"]
+	
+	
+	numerator = firstNum + secondNum
+	denom = firstDen + secondDen + thirdDen + fourthDen
+	cGivends = numerator/denom
+	
+	return cGivends
+
+def probDyspnoeaGivenPollution(cancerNode, pollutionNode, smokerNode, dyspnoeaNode):
+	firstNum = dyspnoeaNode.probabilites["C"] * cancerNode.probabilities["~PS"] * smokerNode.probabilites["T"] * pollutionNode["H"]
+	secondNum = dyspnoeaNode.probabilites["C"] * cancerNode.probabilites["~P~S"] * smokerNode.probabilities["F"] * pollutionNode["H"]
+	thirdNum = dyspnoeaNode.probabilities["~C"] * cancerNode.probabilities["~PS"] * smokerNode.probabilities["T"] * pollutionNode["H"]
+	fouthNum = dyspnoeaNode.probabilities["~C"] * cancerNode.probabilities["~P~S"] * smokerNode.probabilities["F"] * pollutionNode["H"]
+	
+	firstDen = cancerNode.probabilities["~PS"] * smokerNode.probabilities["T"] * pollutionNode.probabilities["H"]
+	secondDen = cancerNode.probabilities["~P~S"] * smokerNode.probabilities["F"] * pollutionNode.probabilities["H"]
+	thirdDen = (1.0 - cancerNode.probabilites["~PS"]) * smokerNode.probabilites["T"] * pollutionNode.probabilities["H"]
+	fourthDen = (1.0 - cancerNode.probabilities["~P~C"]) * smokerNode.probabilities["F"] * pollutionNode.probabilities["H"]
+	
+	numerator = firstNum + secondNum + thirdNum + fourthNum
+	denom = firstDen + secondDen + thirdDen + fourthDen
+	
+	dGivenp = numerator/denom
+	
+	return dGivenp
+	
+def probPollutionGivenDys(cancerNode, pollutionNode, smokerNode, dyspnoeaNode):
+	x = probDyspnoeaGivenPollution(cancerNode, pollutionNode, smokerNode, dyspnoeaNode)
+	
+	pGivend = (x * dyspnoeaNode.marginal) / pollutionNode.probabilites["H"]
+	
+	return pGivend
+	
+def probSmokerGivenDyspnoea(cancerNode, pollutionNode, smokerNode, dyspnoeaNode):
+	x = probDyspnoeaGivenSmoker(cancerNode, xrayNode, pollutionNode, smokerNode)
+	
+	sGivend = (x * dyspnoeaNode.marginal) / smokerNode.probabilities["T"]
+	
+	return sGivend
+	
+def probCancerGivenDyspnoea(cancerNode, dyspnoeaNode):
+	cGivend = (dyspnoeaNode["C"] * cancerNode.marginal) / dyspnoeaNode.marginal
+	
+	return cGivend
 	
 #def probPollutionGivenCancerAndSmoker(cancerNode, xrayNode, pollutionNode, smokerNode):
 	#numerator = jointPCS(cancerNode, pollutionNode, smokerNode)
