@@ -77,9 +77,10 @@ def prior_cGivenR(resultArray):
 	totalRTrue = 0
 	for subarray in resultArray:
 		if subarray[2] == "r":
+			totalRTrue = totalRTrue + 1.0
 			if subarray[0] == "c":
 				totalCTrue = totalCTrue + 1.0
-			totalRTrue = totalRTrue + 1.0
+			
 	prob = totalCTrue / totalRTrue
 	print(("With prior sampling, P(c = true | rain = true) is: {0}").format(prob))
 	
@@ -90,9 +91,10 @@ def prior_sGivenW(resultArray):
 	
 	for subarray in resultArray:
 		if subarray[3] == "w":
+			totalWTrue = totalWTrue + 1.0
 			if subarray[1] == "s":
 				totalSTrue = totalSTrue + 1.0
-			totalWTrue = totalWTrue + 1.0
+			
 	prob = totalSTrue / totalWTrue
 	print(("With prior sampling, P(s = true | w = true) is: {0}").format(prob))
 
@@ -117,6 +119,7 @@ def rejection_cTrue():
 	samples = Samples.samples
 	cloudyTrue = 0.0
 	
+	#Don't even generate samples for other variables
 	for number in samples:
 		if number < 0.5:
 			cloudyTrue += 1.0
@@ -140,9 +143,11 @@ def rejection_cGivenR():
 			cloudy = "c"
 		i = i + 1
 		if cloudy == "c":
+			#get sample for r, since that's what we want
 			if samples[i] < 0.8:
 				rain = "r"
 				i = i + 1
+				#complete sample set for s and w
 				if samples[i] < 0.1:
 					sprinkling = "s"
 					i = i + 1
@@ -150,11 +155,10 @@ def rejection_cGivenR():
 						wetGrass = "w"
 				else:
 					i = i + 1
-					if samples[i] < 0.0:
-						wetGrass = "w"
 			else:
 				i = i + 1
 				continue
+		#Continue generating samples for r for all cases of c
 		else:
 			if samples[i] < 0.2:
 				rain = "r"
@@ -183,9 +187,9 @@ def rejection_cGivenR():
 	totalRTrue = 0
 	
 	for sample in results:
+		totalRTrue = totalRTrue + 1.0
 		if sample[0] == "c":
 			totalCTrue = totalCTrue + 1.0
-		totalRTrue = totalRTrue + 1.0
 	
 	prob = totalCTrue / totalRTrue
 	print(("With rejection sampling, P(c = true | rain = true) is: {0}").format(prob))
@@ -204,6 +208,7 @@ def rejection_sGivenW():
 		if samples[i] < 0.5:
 			cloudy = "c"
 		i = i + 1
+		#generate samples for s in both cases of c
 		if cloudy == "c":
 			if samples[i] < 0.1:
 				sprinkler = "s"
@@ -218,6 +223,7 @@ def rejection_sGivenW():
 			if samples[i] < 0.2:
 				rain = "r"
 			i = i + 1
+		#get only true w samples
 		if sprinkler == "s" and rain == "r":
 			if samples[i] < 0.99:
 				results.append([cloudy, sprinkler, rain, "w"])
@@ -227,6 +233,7 @@ def rejection_sGivenW():
 		elif sprinkler == "~s" and rain == "r":
 			if samples[i] < 0.9:
 				results.append([cloudy, sprinkler, rain, "w"])
+				#we don't even add a sample set to results unless w is true
 		i = i + 1
 		cloudy = "~c"
 		sprinkler = "~s"
@@ -253,6 +260,7 @@ def rejection_sGivenCandW():
 		if samples[i] < 0.5:
 				cloudy = "c"
 				i = i + 1
+		#we reject if c isn't true
 		else:
 			i = i + 1
 			continue
@@ -264,7 +272,8 @@ def rejection_sGivenCandW():
 		if samples[i] < 0.8:
 			rain = "r"
 		i = i + 1
-
+		
+		#we also reject if w isn't true (by not added sample set to results)
 		if (sprinkler == "s") and (rain == "r"):
 			if samples[i] < .99:
 				results.append([cloudy, sprinkler, rain, "w"])
@@ -303,6 +312,6 @@ if __name__=='__main__':
 	rejection_cTrue()
 	rejection_cGivenR()
 	rejection_sGivenW()
-	rejection_sGivenCandW()
+	rejection_sGivenCandW() #don't like
 			
  
