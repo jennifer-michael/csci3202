@@ -1,4 +1,4 @@
- #Class for a Bayes Node
+ #Class for a Bayes Node and BayesNet construction
  
 class BayesNode:
 	'''
