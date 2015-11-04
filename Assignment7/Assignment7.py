@@ -138,7 +138,7 @@ def rejection_cGivenR():
 	results = []
 	
 	i = 0
-	while i < sampleSize-1:
+	while i < sampleSize:
 		if samples[i] < 0.5:
 			cloudy = "c"
 		i = i + 1
@@ -147,41 +147,21 @@ def rejection_cGivenR():
 			if samples[i] < 0.8:
 				rain = "r"
 				i = i + 1
-				#complete sample set for s and w
-				if samples[i] < 0.1:
-					sprinkling = "s"
-					i = i + 1
-					if samples[i] < 0.99:
-						wetGrass = "w"
-				else:
-					i = i + 1
+				results.append([cloudy, sprinkling, rain, wetGrass])
 			else:
 				i = i + 1
-				continue
-		#Continue generating samples for r for all cases of c
+
+		#Continue generating samples for r for c being false
 		else:
 			if samples[i] < 0.2:
 				rain = "r"
 				i = i + 1
-				if samples[i] < 0.5:
-					sprinkling = "s"
-					i = i + 1
-					if samples[i] < 0.99:
-						wetGrass = "w"
-					i = i + 1
-				else:
-					i = i + 1
-					if samples[i] < 0.9:
-						wetGrass = "w"
-					i = i + 1
+				results.append([cloudy, sprinkling, rain, wetGrass])
 			else:
 				i = i + 1
-				continue
-		results.append([cloudy, sprinkling, rain, wetGrass])
+		
 		cloudy = "~c"
-		sprinkling = "~s"
 		rain = "~r"
-		wetGrass = "~w"
 			
 	totalCTrue = 0
 	totalRTrue = 0
@@ -204,7 +184,7 @@ def rejection_sGivenW():
 	results = []
 	
 	i = 0
-	while i < sampleSize-4:
+	while i < sampleSize:
 		if samples[i] < 0.5:
 			cloudy = "c"
 		i = i + 1
@@ -256,7 +236,7 @@ def rejection_sGivenCandW():
 	results = []
 	
 	i = 0
-	while i < sampleSize - 3:
+	while i < sampleSize-3:
 		if samples[i] < 0.5:
 				cloudy = "c"
 				i = i + 1
